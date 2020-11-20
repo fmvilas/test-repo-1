@@ -12,8 +12,8 @@ jobs:
     steps:
       - name: Set version environment variable
         run: |
-          export RELEASE_VERSION=${echo $GITHUB_REF | cut -c12-}
-          env
+          export RELEASE_VERSION="$(echo $GITHUB_REF | cut -c12-)"
+          env | grep RELEASE_VERSION
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
