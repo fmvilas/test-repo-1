@@ -10,11 +10,16 @@ jobs:
     env:
       TARGET_REPO: fmvilas/test-repo-2
     steps:
-      - name: notify
+      - name: Set version environment variable
         run: |
-          curl \
-          -X POST \
-          -H "Accept: application/vnd.github.v3+json" \
-          "https://api.github.com/repos/$TARGET_REPO/dispatches" \
-          -d '{"event_type": "$GITHUB_REPOSITORY/release", "client_payload": { "version": "${echo $GITHUB_REF | cut -c12-}" }}'
+          export RELEASE_VERSION=${echo $GITHUB_REF | cut -c12-}
+          env
+
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          repository: 'fmvilas/test-repo-2'
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          event-type: '${{github.repository}}/release'
+          client-payload: '{"version":"${{env.RELEASE_VERSION}}"}'
           
