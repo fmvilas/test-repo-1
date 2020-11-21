@@ -5,20 +5,21 @@ on:
     types: [published]
 
 jobs:
-  notify:
+  dispatch:
+    # needs: release
+    strategy:
+      matrix:
+        repo: ['fmvilas/test-repo-2']
     runs-on: ubuntu-latest
-    env:
-      TARGET_REPO: fmvilas/test-repo-2
     steps:
-      - name: Set version environment variable
-        run: |
-          echo "RELEASE_VERSION=$(echo $GITHUB_REF | cut -c12-)" >> $GITHUB_ENV
+      - id: package_details
+        uses: ./.github/actions/package-details
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
         with:
-          repository: 'fmvilas/test-repo-2'
+          repository: ${{ matrix.repo }}
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           event-type: '${{github.repository}}/release'
-          client-payload: '{"version":"${{env.RELEASE_VERSION}}"}'
+          client-payload: '{"name": "${{ steps.package_details.outputs.name }}", "version":"${{ steps.package_details.outputs.version }}"}'
           
