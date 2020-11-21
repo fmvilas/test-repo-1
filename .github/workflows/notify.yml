@@ -6,9 +6,11 @@ on:
 
 jobs:
   release:
-    - name: Checkout repo
-      uses: actions/checkout@v2
-      
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
   dispatch:
     needs: release
     strategy:
