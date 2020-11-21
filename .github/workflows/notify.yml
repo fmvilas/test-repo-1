@@ -5,14 +5,8 @@ on:
     types: [published]
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-
   dispatch:
-    needs: release
+    # needs: release
     strategy:
       matrix:
         repo: ['fmvilas/test-repo-2']
@@ -20,7 +14,7 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-        
+
       - id: package_details
         uses: ./.github/actions/package-details
 
