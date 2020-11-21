@@ -5,8 +5,12 @@ on:
     types: [published]
 
 jobs:
+  release:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      
   dispatch:
-    # needs: release
+    needs: release
     strategy:
       matrix:
         repo: ['fmvilas/test-repo-2']
